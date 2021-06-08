@@ -6,12 +6,11 @@ import (
 	"net/http"
 )
 
-
 func AuthMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
-		oauth2Token, err :=config.Conf.Config.Exchange(ctx, r.URL.Query().Get("code"))
-		var verifier = config.Conf.Provider.Verifier(&oidc.Config{ClientID: config.ClientID})
+		oauth2Token, err := config.OAuth2Config.Exchange(ctx, r.URL.Query().Get("code"))
+		var verifier = config.Provider.Verifier(&oidc.Config{ClientID: config.ClientID})
 		if err != nil {
 			// handle error
 		}

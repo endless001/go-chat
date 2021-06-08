@@ -9,17 +9,11 @@ import (
 )
 
 var (
-	Conf = &OAuth2Config{}
+	OAuth2Config *oauth2.Config
+	Provider     *oidc.Provider
 	ClientID     = os.Getenv("GOOGLE_OAUTH2_CLIENT_ID")
 	ClientSecret = os.Getenv("GOOGLE_OAUTH2_CLIENT_SECRET")
 )
-
-
-type OAuth2Config struct {
-	Config   *oauth2.Config
-	Provider *oidc.Provider
-
-}
 
 func init() {
 	provider, err := oidc.NewProvider(context.Background(), "https://accounts.google.com")
@@ -34,8 +28,7 @@ func init() {
 		RedirectURL:  "http://127.0.0.1:5556/auth/google/callback",
 		Scopes:       []string{oidc.ScopeOpenID, "profile", "email"},
 	}
-	c := OAuth2Config{}
-	c.Config = &config
-	c.Provider = provider
-	Conf = &c
+
+	OAuth2Config = &config
+	Provider = provider
 }
